@@ -33,7 +33,9 @@ class TaskItem extends StatelessWidget {
             trailing: Checkbox(
               activeColor: Colors.lightGreen,
               value: isChecked,
-              onChanged: checkboxCallback,
+              onChanged: (value) {
+                checkboxCallback(value);
+              },
             )),
       ),
     );

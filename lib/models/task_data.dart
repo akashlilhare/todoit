@@ -1,31 +1,22 @@
-import 'dart:collection';
+import 'package:todoit/utils/database_helper.dart';
 
-import 'package:flutter/foundation.dart';
-import 'package:todoit/models/task-model.dart';
+import '../models/task.dart';
 
-class TaskData extends ChangeNotifier {
-  List<Task> _tasks = [];
-
-  int get taskCount {
-    return _tasks.length;
+class TaskHelper {
+  var db = new DatabaseHelper();
+  Future<int> addTask(String name, String date, int taskDone) async {
+    int savedTask = await db.saveTask(Task("$name", "$date", taskDone));
+    print(savedTask);
+    return savedTask;
   }
 
-  UnmodifiableListView<Task> get tasks {
-    return UnmodifiableListView(_tasks);
-  }
-
-  void addTask(String title, String date) {
-    _tasks.add(Task(name: title, date: date));
-    notifyListeners();
-  }
-
-  void updateTask(Task task) {
-    task.toggleDone();
-    notifyListeners();
-  }
-
-  void deleteTask(Task task) {
-    _tasks.remove(task);
-    notifyListeners();
+  Future<List> getAllTask() async {
+    List _task;
+    _task = await db.getAllTask();
+    for (int i = 0; i < _task.length; i++) {
+      Task task = Task.map(_task[i]);
+      print(task);
+    }
+    return _task;
   }
 }
