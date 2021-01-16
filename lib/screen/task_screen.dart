@@ -23,13 +23,13 @@ class _TaskScreenState extends State<TaskScreen> {
       nonPersonalizedAds: true,
       keywords: <String>['Time', 'Study', 'Books', 'Management']);
 
-  BannerAd createBannerAd = BannerAd(
-      adUnitId: banner,
-      size: AdSize.smartBanner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("BannerAd $event");
-      });
+  // BannerAd createBannerAd = BannerAd(
+  //     adUnitId: banner,
+  //     size: AdSize.smartBanner,
+  //     targetingInfo: targetingInfo,
+  //     listener: (MobileAdEvent event) {
+  //       print("BannerAd $event");
+  //     });
 
   @override
   void initState() {
@@ -37,14 +37,14 @@ class _TaskScreenState extends State<TaskScreen> {
       _readTaskList();
     });
 
-    FirebaseAdMob.instance
-        .initialize(appId: interstitial);
-    super.initState();
+    // FirebaseAdMob.instance
+    //     .initialize(appId: interstitial);
+    // super.initState();
   }
 
   @override
   void dispose() {
-    createBannerAd.dispose();
+   // createBannerAd.dispose();
     // createInterstitialAd.dispose();
     super.dispose();
   }
@@ -53,10 +53,10 @@ class _TaskScreenState extends State<TaskScreen> {
 
   bool showAd = false;
   _readTaskList() async {
-    createBannerAd..isLoaded().then((value) => showAd = value);
-    createBannerAd
-      ..load()
-      ..show();
+    // createBannerAd..isLoaded().then((value) => showAd = value);
+    // createBannerAd
+    //   ..load()
+    //   ..show();
 
     List items = await db.getAllTask();
     items.forEach((item) {
@@ -74,10 +74,10 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   _updateTask(int id, Task toUpdate, int pos) async {
-    createBannerAd..isLoaded().then((value) => showAd = value);
-    createBannerAd
-      ..load()
-      ..show();
+    // createBannerAd..isLoaded().then((value) => showAd = value);
+    // createBannerAd
+    //   ..load()
+    //   ..show();
     final Task newTask = await showDialog(
         context: context,
         builder: (context) => UpdatedDialogBox(
@@ -99,9 +99,9 @@ class _TaskScreenState extends State<TaskScreen> {
       await db.update(va, toUpdate);
     }
 
-    createBannerAd
-      ..load()
-      ..show();
+    // createBannerAd
+    //   ..load()
+    //   ..show();
     setState(() {
       _taskList.remove(toUpdate);
       _taskList.insert(pos, Task(toUpdate.taskName, toUpdate.taskData, va));
@@ -139,10 +139,10 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
             backgroundColor: Colors.green,
             onPressed: () async {
-              createBannerAd..isLoaded().then((value) => showAd = value);
-              createBannerAd
-                ..load()
-                ..show();
+              // createBannerAd..isLoaded().then((value) => showAd = value);
+              // createBannerAd
+              //   ..load()
+              //   ..show();
               final newTask = await showDialog(
                   context: context,
                   builder: (context) => MyDialog(
