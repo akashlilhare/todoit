@@ -84,8 +84,8 @@ class DatabaseHelper {
 
     await dbClient.rawUpdate('''
       UPDATE $tableName SET $isDone = ? 
-      WHERE $columnId = ?
-    ''', [value, task.id]);
+      WHERE $columnTask = ?
+    ''', [value, task.taskName]);
   }
 
   Future<int> updateTask(Task task) async {

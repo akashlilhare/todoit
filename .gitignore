@@ -31,6 +31,10 @@
 .pub/
 /build/
 
+# Android releted
+**/android/key.properties
+# Admob id
+lib/admobId.dart
 # Web related
 lib/generated_plugin_registrant.dart
 
