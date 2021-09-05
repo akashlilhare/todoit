@@ -8,62 +8,78 @@ import 'package:todoit/utils/database_helper.dart';
 import 'package:todoit/widget/my-dialog.dart';
 import 'package:todoit/widget/task-list.dart';
 import 'package:todoit/widget/update-dialog-box.dart';
-import 'package:todoit/admobId.dart';
+
+import '../admobId.dart';
+
 class TaskScreen extends StatefulWidget {
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
 
-final List<Task> _taskList = <Task>[];
-var random = new Random();
-
 class _TaskScreenState extends State<TaskScreen> {
+  List<Task> _taskList = <Task>[];
+  var random = new Random();
+  bool isLoading = true;
+  var db = new DatabaseHelper();
+  bool showAd = false;
+
+
   static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
       testDevices: <String>[],
       nonPersonalizedAds: true,
       keywords: <String>['Time', 'Study', 'Books', 'Management']);
 
-  // BannerAd createBannerAd = BannerAd(
-  //     adUnitId: banner,
-  //     size: AdSize.smartBanner,
-  //     targetingInfo: targetingInfo,
-  //     listener: (MobileAdEvent event) {
-  //       print("BannerAd $event");
-  //     });
+
+  BannerAd createBannerAd = BannerAd(
+      adUnitId: banner,
+      size: AdSize.smartBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("BannerAd $event");
+      });
 
   @override
   void initState() {
-    setState(() {
-      _readTaskList();
-    });
+    _initData();
+    super.initState();
+  }
 
-    // FirebaseAdMob.instance
-    //     .initialize(appId: interstitial);
-    // super.initState();
+  _initData() async{
+    try{
+      await _initAds();
+      await _readTaskList();
+    }catch(err){
+    print("error : " + err.toString());
+
+    }
+   setState(() {
+     isLoading = false;
+   });
+  }
+
+
+
+  _initAds() async{
+   await FirebaseAdMob.instance.initialize(appId: interstitial);
+  }
+
+  _readTaskList() async {
+    createBannerAd..isLoaded().then((value) => showAd = value);
+    createBannerAd
+      ..load()
+      ..show();
+
+    List items = await db.getAllTask();
+    items.forEach((item) {
+        _taskList.add(Task.map(item));
+    });
   }
 
   @override
   void dispose() {
-   // createBannerAd.dispose();
+    createBannerAd.dispose();
     // createInterstitialAd.dispose();
     super.dispose();
-  }
-
-  var db = new DatabaseHelper();
-
-  bool showAd = false;
-  _readTaskList() async {
-    // createBannerAd..isLoaded().then((value) => showAd = value);
-    // createBannerAd
-    //   ..load()
-    //   ..show();
-
-    List items = await db.getAllTask();
-    items.forEach((item) {
-      setState(() {
-        _taskList.add(Task.map(item));
-      });
-    });
   }
 
   _deleteTask(int id) async {
@@ -74,10 +90,10 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   _updateTask(int id, Task toUpdate, int pos) async {
-    // createBannerAd..isLoaded().then((value) => showAd = value);
-    // createBannerAd
-    //   ..load()
-    //   ..show();
+    createBannerAd..isLoaded().then((value) => showAd = value);
+    createBannerAd
+      ..load()
+      ..show();
     final Task newTask = await showDialog(
         context: context,
         builder: (context) => UpdatedDialogBox(
@@ -99,9 +115,9 @@ class _TaskScreenState extends State<TaskScreen> {
       await db.update(va, toUpdate);
     }
 
-    // createBannerAd
-    //   ..load()
-    //   ..show();
+    createBannerAd
+      ..load()
+      ..show();
     setState(() {
       _taskList.remove(toUpdate);
       _taskList.insert(pos, Task(toUpdate.taskName, toUpdate.taskData, va));
@@ -109,6 +125,7 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     int number;
@@ -122,7 +139,7 @@ class _TaskScreenState extends State<TaskScreen> {
     double deviceHeight = size.height;
     double borderRadius = size.width * 0.036;
     bool isPortrait =
-        (MediaQuery.of(context).orientation == Orientation.portrait);
+    (MediaQuery.of(context).orientation == Orientation.portrait);
     double fabPadding = isPortrait ? deviceHeight * .07 : deviceHeight * .03;
 
     return Scaffold(
@@ -139,15 +156,14 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
             backgroundColor: Colors.green,
             onPressed: () async {
-              // createBannerAd..isLoaded().then((value) => showAd = value);
-              // createBannerAd
-              //   ..load()
-              //   ..show();
+              createBannerAd..isLoaded().then((value) => showAd = value);
+              createBannerAd
+                ..load()
+                ..show();
               final newTask = await showDialog(
                   context: context,
                   builder: (context) => MyDialog(
-                        ctx: _scaffoldKey,
-                      ));
+                  ));
               if (newTask.taskData == null || newTask.taskName == null) return;
               setState(() {
                 _taskList.insert(0, newTask);
@@ -158,51 +174,47 @@ class _TaskScreenState extends State<TaskScreen> {
         body: SafeArea(
           child: isPortrait
               ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        padding: EdgeInsets.only(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  padding: EdgeInsets.only(
                           top: 20.0,
                           left: 30.0,
                           bottom: 10.0,
                           right: 20.0,
                         ),
-                        child: Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Todo-It',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                                if (_taskList.length != 0)
                                   Text(
-                                    'Todo-It',
+                                    '${_taskList.length.toString()} Task \nRemaining',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w900,
+                                      color: Colors.redAccent,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  if (_taskList.length != 0)
-                                    Text(
-                                      '${_taskList.length.toString()} Task \nRemaining',
-                                      style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              )
-                            ],
-                          ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
                         )),
                     (_taskList.length == 0)
-                        ? Expanded(
-                            child: Container(
+                        ? Container(
                             //  color: Colors.black,
                             child: Stack(
                               fit: StackFit.expand,
@@ -233,9 +245,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                 topLeft: Radius.circular(20),
                               ),
                             ),
-                          ))
-                        : Expanded(
-                            child: Container(
+                          )
+                        : Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
@@ -250,54 +261,50 @@ class _TaskScreenState extends State<TaskScreen> {
                               checkboxCallback: _updateCheckbox,
                               currentCtx: _scaffoldKey,
                             ),
-                          )),
+                          ),
                   ],
-                )
+          )
               : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        padding: EdgeInsets.only(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  padding: EdgeInsets.only(
                           top: 5.0,
                           left: 30.0,
                           bottom: 5.0,
                           right: 30.0,
                         ),
-                        child: Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Todo-It',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w900,
-                                    ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Todo-It',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w900,
                                   ),
-                                  Text(
-                                    '${_taskList.length.toString()} Task\n To do',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                ),
+                                Text(
+                                  '${_taskList.length.toString()} Task\n To do',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              )
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
                         )),
                     (_taskList.length == 0)
-                        ? Expanded(
-                            child: Container(
+                        ? Container(
                             //  color: Colors.black,
                             child: Stack(
                               fit: StackFit.expand,
@@ -328,9 +335,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                 topLeft: Radius.circular(20),
                               ),
                             ),
-                          ))
-                        : Expanded(
-                            child: Container(
+                          )
+                        : Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
@@ -345,9 +351,9 @@ class _TaskScreenState extends State<TaskScreen> {
                               checkboxCallback: _updateCheckbox,
                               currentCtx: _scaffoldKey,
                             ),
-                          )),
+                          ),
                   ],
-                ),
+          ),
         ));
   }
 }

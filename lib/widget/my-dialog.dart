@@ -5,9 +5,7 @@ import 'package:todoit/models/task.dart';
 import 'package:todoit/utils/database_helper.dart';
 
 class MyDialog extends StatefulWidget {
-  final ctx;
 
-  MyDialog({this.ctx});
   @override
   _MyDialogState createState() => _MyDialogState();
 }
@@ -186,7 +184,7 @@ class _MyDialogState extends State<MyDialog> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            RaisedButton(
+                            FlatButton(
                                 child: Text('Cancel'),
                                 onPressed: () {
                                   Navigator.pop(context);

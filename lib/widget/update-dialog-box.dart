@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:todoit/utils/database_helper.dart';
-
 import '../models/task.dart';
 
 class UpdatedDialogBox extends StatefulWidget {

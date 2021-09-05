@@ -81,7 +81,6 @@ class DatabaseHelper {
 
   Future<void> update(int value, Task task) async {
     var dbClient = await db;
-
     await dbClient.rawUpdate('''
       UPDATE $tableName SET $isDone = ? 
       WHERE $columnTask = ?
