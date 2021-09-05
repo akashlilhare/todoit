@@ -1,5 +1,5 @@
 # todoit
-- [Download todoit](https://play.google.com/store/apps/details?id=com.akash.todoit)
+- **[Download todoit](https://play.google.com/store/apps/details?id=com.akash.todoit)**
 <h1>some screenshots</h1>
 <table>
   <tr>
