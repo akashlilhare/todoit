@@ -4,7 +4,7 @@
 
 * User friendly task management
 * Grouping tasks in handy task lists
-* Check mark the finised task and delete the task
+* Checkmark the finished task and delete the task
 * Smart home screen widgets show instantly what to do
 
 
