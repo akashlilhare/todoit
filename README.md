@@ -1,5 +1,32 @@
 # todoit
-- **[Download todoit](https://play.google.com/store/apps/details?id=com.akash.todoit)**
+
+### Todoit is a task management app to help you stay organized and manage your day-to-day. It allows users to manage their tasks from a smartphone.
+
+* User friendly task management
+* Grouping tasks in handy task lists
+* Check mark the finised task and delete the task
+* Smart home screen widgets show instantly what to do
+
+
+### Installing required packages
+
+1. Clone this repository
+   ```
+    git clone https://github.com/akashlilhare/todoit.git
+   ```
+
+2. Set current working directory to sudoku
+
+3. Run these commands:
+   ```
+   flutter pub get
+   flutter pub upgrade
+   flutter pub outdated
+   ```
+
+ This will install all the required packages
+
+
 <h1>some screenshots</h1>
 <table>
   <tr>
@@ -10,22 +37,8 @@
         <td><img src="screenshot/screen_5.png" width="200" height="400"></td>
   </tr>
  </table>
- 
-A new Flutter application.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
- 
 
 
 
