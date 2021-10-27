@@ -15,7 +15,7 @@
     git clone https://github.com/akashlilhare/todoit.git
    ```
 
-2. Set current working directory to sudoku
+2. Set current working directory to todoit
 
 3. Run these commands:
    ```
